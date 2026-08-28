@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Client - Seperti Postman</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>API Request Client</h2>
+
+        <!-- Baris Atas: Method & URL -->
+        <div class="row">
+            <select id="method">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="PATCH">PATCH</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+            <input type="text" id="url" placeholder="Masukkan URL API...">
+            <button id="btnHantar">Hantar</button>
+        </div>
+
+        <!-- 3 Lajur Berasingan -->
+        <div class="grid">
+            <!-- Lajur 1: Header -->
+            <div class="card">
+                <h3>📤 Headers</h3>
+                <textarea id="headers" placeholder='{"Authorization": "Bearer ", "Accept": "application/json"}'></textarea>
+            </div>
+
+            <!-- Lajur 2: Body -->
+            <div class="card">
+                <h3>📥 Request Body</h3>
+                <textarea id="body" placeholder='{"nama": "contoh", "data": ""}'></textarea>
+            </div>
+
+            <!-- Lajur 3: Keputusan -->
+            <div class="card">
+                <h3>📧 Response</h3>
+                <pre id="output">Keputusan akan muncul disini...</pre>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
