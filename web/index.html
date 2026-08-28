@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Client - Seperti Postman</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:system-ui; }
+body { background:#0f172a; color:#e2e8f0; padding:15px; }
+.container { max-width:1200px; margin:0 auto; }
+h2 { text-align:center; margin-bottom:15px; color:#38bdf8; }
+
+.row { display:flex; gap:8px; margin-bottom:15px; }
+#method { padding:8px; background:#1e293b; border:1px solid #475569; color:white; border-radius:4px; }
+#url { flex:1; padding:8px; background:#1e293b; border:1px solid #475569; color:white; border-radius:4px; font-size:14px; }
+button { padding:8px 18px; background:#0ea5e9; border:none; border-radius:4px; cursor:pointer; font-weight:500; }
+button:hover { background:#0284c7; }
+
+.grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.card { background:#1e293b; padding:12px; border-radius:6px; border:1px solid #334155; }
+h3 { margin-bottom:8px; font-size:15px; color:#7dd3fc; }
+textarea, pre {
+    width:100%; min-height:220px; background:#0f172a; border:1px solid #475569;
+    color:#f1f5f9; padding:8px; border-radius:4px; font-size:13px; line-height:1.5;
+    font-family:'Consolas','Monaco',monospace;
+}
+pre { overflow:auto; white-space:pre-wrap; word-break:break-all; }
+
+@media(max-width:850px) {
+    .grid { grid-template-columns:1fr; }
+    .row { flex-wrap:wrap; }
+}
+
+        
+    </style>
 </head>
 <body>
     <div class="container">
@@ -44,6 +73,64 @@
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script>
+// Ambil elemen
+const el = {
+    method: document.getElementById('method'),
+    url: document.getElementById('url'),
+    headers: document.getElementById('headers'),
+    body: document.getElementById('body'),
+    output: document.getElementById('output'),
+    btnHantar: document.getElementById('btnHantar')
+};
+
+// Fungsi utama komunikasi API
+async function jalankanAPI() {
+    try {
+        el.output.textContent = "Sedang memproses...";
+
+        // Baca & susun data pengguna
+        const url = el.url.value.trim();
+        const kaedah = el.method.value;
+        const headerMentah = el.headers.value.trim();
+        const isiMentah = el.body.value.trim();
+
+        // Tukar teks kepada objek JSON
+        const headers = headerMentah ? JSON.parse(headerMentah) : {};
+        const body = isiMentah ? JSON.parse(isiMentah) : null;
+
+        // Tetapan Fetch
+        const opsyen = {
+            method: kaedah,
+            headers: { 'Content-Type': 'application/json', ...headers }
+        };
+
+        // Masukkan badan hanya jika bukan GET
+        if (['POST','PUT','PATCH','DELETE'].includes(kaedah) && body) {
+            opsyen.body = JSON.stringify(body);
+        }
+
+        // Hantar permintaan
+        const res = await fetch(url, opsyen);
+        const data = await res.json();
+
+        // Papar kejayaan
+        el.output.textContent = `Status: ${res.status} ${res.statusText}\n` + JSON.stringify(data, null, 2);
+
+    } catch (ralat) {
+        el.output.textContent = "Ralat: " + ralat.message;
+    }
+}
+
+// Tekan butang
+el.btnHantar.addEventListener('click', jalankanAPI);
+
+// Kosongkan ruang apabila klik
+el.url.addEventListener('focus', e => { if(!e.target.dataset.ada) { e.target.value=''; e.target.dataset.ada='ya'; }});
+el.headers.addEventListener('focus', e => { if(!e.target.dataset.ada) { e.target.value=''; e.target.dataset.ada='ya'; }});
+el.body.addEventListener('focus', e => { if(!e.target.dataset.ada) { e.target.value=''; e.target.dataset.ada='ya'; }});
+
+        
+    </script>
 </body>
 </html>
