@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔗 URL Multi-Path Opener</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .main-container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e293b;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 700px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .column {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            font-size: 17px;
+            color: #334155;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: #475569;
+            margin: 12px 0 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .btn-primary:hover { background: #2563eb; }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        .btn-success:hover { background: #059669; }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        .btn-danger:hover { background: #dc2626; }
+
+        .btn-purple {
+            background: #8b5cf6;
+            color: white;
+        }
+        .btn-purple:hover { background: #7c3aed; }
+
+        .btn-cyan {
+            background: #0891b2;
+            color: white;
+        }
+        .btn-cyan:hover { background: #0e7490; }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .preview-box {
+            background: #eff6ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            word-break: break-all;
+            color: #1e40af;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .path-list-container, .saved-container {
+            margin-top: 15px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-size: 14px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .mini-btn {
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            margin-left: 6px;
+        }
+
+        .empty-text {
+            color: #94a3b8;
+            font-size: 13px;
+            padding: 8px;
+        }
+
+        .open-all-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .open-all-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 14px 40px;
+            font-size: 16px;
+        }
+        .open-all-btn:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <h1>🔗 URL Multi-Path Opener</h1>
+
+    <div class="grid-2col">
+        <!-- 📌 COLUMN 1: Build URL -->
+        <div class="column">
+            <h2>📌 Build URL</h2>
+
+            <label for="baseUrl">Base URL:</label>
+            <input type="text" id="baseUrl" placeholder="e.g. abc.com or https://abc.com">
+
+            <label for="pathSelect">Pick Path from List:</label>
+            <select id="pathSelect">
+                <option value="">-- Select a path --</option>
+            </select>
+
+            <button class="btn-primary" id="buildBtn">✓ Build Full URL</button>
+
+            <div class="preview-box" id="previewBox">
+                Preview will appear here...
+            </div>
+
+            <div class="btn-row">
+                <button class="btn-purple" id="openSingleBtn">🔓 Open This URL</button>
+                <button class="btn-success" id="saveUrlBtn">+ Save URL</button>
+            </div>
+
+            <div class="saved-container">
+                <h3 style="font-size:14px; color:#475569; margin-top:20px;">Saved URLs</h3>
+                <div id="savedUrlsList">
+                    <span class="empty-text">No saved URLs yet</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ⚙️ COLUMN 2: Path Management -->
+        <div class="column">
+            <h2>⚙️ Path List Manager</h2>
+
+            <label for="newPath">Add New Path:</label>
+            <input type="text" id="newPath" placeholder="e.g. /blog or /123">
+            <button class="btn-success" id="addPathBtn" style="width:100%; margin-top:5px;">+ Add to List</button>
+
+            <div class="path-list-container">
+                <h3 style="font-size:14px; color:#475569;">Current Path List:</h3>
+                <div id="pathListDisplay">
+                    <div class="item-row">
+                        <span>/1</span>
+                        <span class="empty-text">Default</span>
+                    </div>
+                    <div class="item-row">
+                        <span>/2</span>
+                        <span class="empty-text">Default</span>
+                    </div>
+                    <div class="item-row">
+                        <span>/3</span>
+                        <span class="empty-text">Default</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-row" style="margin-top:15px;">
+                <button class="btn-danger" id="clearAllPaths">🗑️ Clear All Paths</button>
+                <button class="btn-cyan" id="resetPaths">↩️ Reset Defaults</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="open-all-section">
+        <button class="open-all-btn" id="openAllUrlsBtn">🚀 OPEN ALL URLs (Base + All Paths)</button>
+    </div>
+</div>
+
+<script>
+// --- DATA ---
+let paths = ['/1', '/2', '/3'];
+let savedUrls = [];
+
+// --- DOM ELEMENTS ---
+const el = {
+    baseUrl: document.getElementById('baseUrl'),
+    pathSelect: document.getElementById('pathSelect'),
+    buildBtn: document.getElementById('buildBtn'),
+    previewBox: document.getElementById('previewBox'),
+    openSingleBtn: document.getElementById('openSingleBtn'),
+    saveUrlBtn: document.getElementById('saveUrlBtn'),
+    savedUrlsList: document.getElementById('savedUrlsList'),
+    newPath: document.getElementById('newPath'),
+    addPathBtn: document.getElementById('addPathBtn'),
+    pathListDisplay: document.getElementById('pathListDisplay'),
+    clearAllPaths: document.getElementById('clearAllPaths'),
+    resetPaths: document.getElementById('resetPaths'),
+    openAllUrlsBtn: document.getElementById('openAllUrlsBtn')
+};
+
+// --- INIT ---
+updatePathUI();
+
+// --- EVENT BINDING ---
+el.buildBtn.addEventListener('click', buildUrl);
+el.openSingleBtn.addEventListener('click', openCurrentUrl);
+el.saveUrlBtn.addEventListener('click', saveCurrentUrl);
+el.addPathBtn.addEventListener('click', addNewPath);
+el.clearAllPaths.addEventListener('click', clearAllPaths);
+el.resetPaths.addEventListener('click', resetToDefaults);
+el.openAllUrlsBtn.addEventListener('click', openAllUrls);
+
+// --- FUNCTIONS ---
+
+function updatePathUI() {
+    // Update dropdown
+    el.pathSelect.innerHTML = '<option value="">-- Select a path --</option>';
+    paths.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p;
+        opt.textContent = p;
+        el.pathSelect.appendChild(opt);
+    });
+
+    // Update display list
+    el.pathListDisplay.innerHTML = '';
+    if (paths.length === 0) {
+        el.pathListDisplay.innerHTML = '<span class="empty-text">No paths added yet</span>';
+        return;
+    }
+    paths.forEach((path, index) => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+            <span>${path}</span>
+            <div style="display:flex;">
+                <button class="mini-btn btn-danger" data-remove="${index}">×</button>
+            </div>
+        `;
+        el.pathListDisplay.appendChild(row);
+    });
+
+    // Bind remove buttons
+    el.pathListDisplay.querySelectorAll('[data-remove]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = parseInt(e.target.dataset.remove);
+            paths.splice(idx, 1);
+            updatePathUI();
+        });
+    });
+}
+
+function addNewPath() {
+    let newPath = el.newPath.value.trim();
+    if (!newPath) {
+        alert('⚠️ Please enter a path!');
+        return;
+    }
+    if (!newPath.startsWith('/')) newPath = '/' + newPath;
+    
+    if (paths.includes(newPath)) {
+        alert('⚠️ This path already exists!');
+        el.newPath.value = '';
+        return;
+    }
+    
+    paths.push(newPath);
+    updatePathUI();
+    el.newPath.value = '';
+}
+
+function clearAllPaths() {
+    if (confirm('🗑️ Clear ALL paths?')) {
+        paths = [];
+        updatePathUI();
+    }
+}
+
+function resetToDefaults() {
+    if (confirm('↩️ Reset to default paths (/1, /2, /3)?')) {
+        paths = ['/1', '/2', '/3'];
+        updatePathUI();
+    }
+}
+
+function buildUrl() {
+    let base = el.baseUrl.value.trim();
+    const path = el.pathSelect.value;
+
+    if (!base) {
+        el.previewBox.innerHTML = '⚠️ Please enter a base URL first!';
+        el.previewBox.removeAttribute('data-fullurl');
+        return;
+    }
+    if (!path) {
+        el.previewBox.innerHTML = '⚠️ Please select a path from the list!';
+        el.previewBox.removeAttribute('data-fullurl');
+        return;
+    }
+
+    // Auto-add protocol
+    if (!base.startsWith('http://') && !base.startsWith('https://')) {
+        base = 'https://' + base;
+    }
+    // Remove trailing slash
+    if (base.endsWith('/')) {
+        base = base.slice(0, -1);
+    }
+
+    const fullUrl = base + path;
+    el.previewBox.innerHTML = `✅ <strong>${fullUrl}</strong>`;
+    el.previewBox.dataset.fullurl = fullUrl;
+}
+
+function openCurrentUrl() {
+    const url = el.previewBox.dataset.fullurl;
+    if (!url) {
+        alert('⚠️ Build a URL first!');
+        return;
+    }
+    window.open(url, '_blank');
+}
+
+function saveCurrentUrl() {
+    const url = el.previewBox.dataset.fullurl;
+    if (!url) {
+        alert('⚠️ Build a URL first!');
+        return;
+    }
+    if (savedUrls.includes(url)) {
+        alert('⚠️ URL already saved!');
+        return;
+    }
+    savedUrls.unshift(url);
+    if (savedUrls.length > 20) savedUrls.pop();
+    updateSavedUrlsUI();
+}
+
+function updateSavedUrlsUI() {
+    if (savedUrls.length === 0) {
+        el.savedUrlsList.innerHTML = '<span class="empty-text">No saved URLs yet</span>';
+        return;
+    }
+    el.savedUrlsList.innerHTML = '';
+    savedUrls.forEach((url, index) => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+            <span style="font-size:12px; word-break:break-all;">${url}</span>
+            <div style="display:flex;">
+                <button class="mini-btn btn-purple" data-open="${index}" title="Open">↗</button>
+                <button class="mini-btn btn-danger" data-del="${index}" title="Remove">×</button>
+            </div>
+        `;
+        el.savedUrlsList.appendChild(row);
+    });
+
+    // Bind open & delete buttons
+    el.savedUrlsList.querySelectorAll('[data-open]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = parseInt(e.target.dataset.open);
+            window.open(savedUrls[idx], '_blank');
+        });
+    });
+    el.savedUrlsList.querySelectorAll('[data-del]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const idx = parseInt(e.target.dataset.del);
+            savedUrls.splice(idx, 1);
+            updateSavedUrlsUI();
+        });
+    });
+}
+
+function openAllUrls() {
+    let base = el.baseUrl.value.trim();
+    
+    if (!base) {
+        alert('⚠️ Please enter a base URL first!');
+        return;
+    }
+    if (paths.length === 0) {
+        alert('⚠️ No paths available! Add some paths first.');
+        return;
+    }
+
+    // Auto-add protocol
+    if (!base.startsWith('http://') && !base.startsWith('https://')) {
+        base = 'https://' + base;
+    }
+    // Remove trailing slash
+    if (base.endsWith('/')) {
+        base = base.slice(0, -1);
+    }
+
+    let openedCount = 0;
+    paths.forEach(path => {
+        window.open(base + path, '_blank');
+        openedCount++;
+    });
+
+    alert(`✅ Successfully opened ${openedCount} URL(s)!\n\n💡 If tabs don't open → allow popups in your browser`);
+}
+</script>
+
+</body>
+</html>
