@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>API Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen">
+
+  <header class="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+    <h1 class="font-semibold text-lg">API Dashboard</h1>
+    <button id="swap" class="btn">⇅ Swap panels</button>
+  </header>
+
+  <main id="main" class="flex flex-col gap-4 p-4 max-w-5xl mx-auto">
+
+    <!-- ============ REQUEST PANEL ============ -->
+    <section class="panel">
+      <h2 class="panel-title">Request</h2>
+
+      <!-- Method + URL -->
+      <div class="flex gap-2">
+        <select id="method" class="field w-32">
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>PATCH</option>
+          <option>DELETE</option>
+          <option>HEAD</option>
+          <option>OPTIONS</option>
+        </select>
+        <input id="url" class="field flex-1" placeholder="https://api.example.com/v1/endpoint" />
+        <button id="send" class="btn-primary" title="Ctrl+Enter">Send</button>
+      </div>
+      <p class="text-xs text-zinc-400 mt-2 break-all">Final URL: <span id="finalUrl">—</span></p>
+
+      <!-- Params | Headers : 2 columns -->
+      <div class="grid md:grid-cols-2 gap-4 mt-4">
+
+        <!-- Params -->
+        <div>
+          <div class="flex justify-between items-center">
+            <h3 class="label">Params</h3>
+            <button id="addParam" class="btn-sm">+ Add</button>
+          </div>
+          <div id="paramRows" class="space-y-2 mt-2"></div>
+        </div>
+
+        <!-- Headers -->
+        <div>
+          <div class="flex justify-between items-center">
+            <h3 class="label">Headers</h3>
+            <div class="flex gap-1">
+              <button class="tab active" data-group="headers" data-mode="text">Text</button>
+              <button class="tab" data-group="headers" data-mode="form">Form</button>
+            </div>
+          </div>
+          <textarea id="headersText" class="field w-full h-28 mt-2 font-mono text-sm"
+            placeholder="Authorization: Bearer TOKEN&#10;Content-Type: application/json&#10;&#10;or JSON: {&quot;Authorization&quot;:&quot;Bearer TOKEN&quot;}"></textarea>
+          <div id="headersForm" class="hidden mt-2">
+            <div id="headerRows" class="space-y-2"></div>
+            <button id="addHeader" class="btn-sm mt-2">+ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="mt-4">
+        <div class="flex justify-between items-center">
+          <h3 class="label">Body</h3>
+          <div class="flex gap-1">
+            <button class="tab active" data-group="body" data-mode="json">JSON</button>
+            <button class="tab" data-group="body" data-mode="text">Text</button>
+            <button class="tab" data-group="body" data-mode="form">Form</button>
+          </div>
+        </div>
+        <textarea id="bodyText" class="field w-full h-72 mt-2 font-mono text-sm" placeholder='{"name":"value"}'></textarea>
+        <div id="bodyForm" class="hidden mt-2">
+          <div id="bodyRows" class="space-y-2"></div>
+          <button id="addBody" class="btn-sm mt-2">+ Add</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RESPONSE PANEL ============ -->
+    <section class="panel">
+      <div class="flex flex-wrap items-center gap-2">
+        <div id="status" class="status-box">—</div>
+        <div id="meta" class="text-xs text-zinc-400">No response yet</div>
+        <div class="ml-auto flex gap-2">
+          <button id="save" class="btn-sm">Save locally</button>
+          <button id="export" class="btn-sm">Export .json</button>
+        </div>
+      </div>
+
+      <div class="flex gap-1 mt-3">
+        <button class="tab active" data-group="output" data-mode="tree">JSON Tree</button>
+        <button class="tab" data-group="output" data-mode="html">HTML</button>
+      </div>
+
+      <div id="viewTree" class="output"></div>
+      <iframe id="viewHtml" class="hidden w-full h-96 mt-3 bg-white rounded" sandbox></iframe>
+
+      <h3 class="label mt-5">Saved responses (local storage)</h3>
+      <ul id="history" class="space-y-1 text-sm mt-2"></ul>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
