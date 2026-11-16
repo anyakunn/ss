@@ -1,0 +1,23 @@
+payload:
+  - 'ip6-localhost'
+  - 'ip6-loopback'
+  - 'internal'
+  - 'lan'
+  - 'local'
+  - '172.16.0.0/12'
+  - '192.0.0.0/24'
+  - '192.168.0.0/16'
+  - '198.18.0.0/16'
+  - '224.0.0.0/4'
+  - '2001:db8::/32'
+  - '5f00::/16'
+  - 'ff00::/8'
+  - IP-CIDR,0.0.0.0/8,no-resolve
+  - IP-CIDR,10.0.0.0/8,no-resolve
+  - IP-CIDR,100.64.0.0/10,no-resolve
+  - IP-CIDR,127.0.0.0/8,no-resolve
+  - IP-CIDR,169.254.0.0/16,no-resolve
+  - IP-CIDR6,::1/128,no-resolve
+  - IP-CIDR6,fc00::/7,no-resolve
+  - IP-CIDR6,fe80::/10,no-resolve
+  - IP-CIDR6,fd00::/8,no-resolve
